@@ -1,0 +1,39 @@
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+	https://raw.github.com/impetus-opensource/Kundera/Kundera-2.0.4/kundera-core/src/test/resources/META-INF/persistence_2_0.xsd"
+	version="2.0">
+
+	<persistence-unit name="kundera_rdbms_pu">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<class>com.impetus.ycsb.entity.PerformanceNoInfo</class>
+		<exclude-unlisted-classes>true</exclude-unlisted-classes>
+		<properties>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect" />
+			<property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" />
+			<property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/performanceNos" />
+			<property name="hibernate.connection.username" value="root" />
+			<property name="hibernate.connection.password" value="impetus" />
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="true" />
+		</properties>
+	</persistence-unit>
+	
+	<persistence-unit name="kundera_neo4j_pu">
+		<provider>com.impetus.kundera.KunderaPersistence</provider>
+		<properties>			
+			<property name="kundera.nodes" value="localhost" />
+			<property name="kundera.port" value="7474" />
+			<property name="kundera.datastore.file.path" value="target/neo4jPerfKundera.db" />			
+			<property name="kundera.dialect" value="neo4j" />
+			<property name="kundera.client.lookup.class"
+				value="com.impetus.client.neo4j.Neo4JClientFactory" />
+			<property name="kundera.cache.provider.class"
+				value="com.impetus.kundera.cache.ehcache.EhCacheProvider" />
+			<property name="kundera.cache.config.resource" value="/ehcache-test.xml" />
+			<property name="kundera.client.property" value="kunderaNeo4JTest.xml"/>
+			<property name="kundera.transaction.resource.class" value="com.impetus.client.neo4j.Neo4JTransaction" />
+		</properties>
+	</persistence-unit>
+
+</persistence>
