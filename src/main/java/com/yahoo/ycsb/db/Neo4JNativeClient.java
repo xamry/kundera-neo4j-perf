@@ -21,6 +21,7 @@ import org.neo4j.graphdb.factory.GraphDatabaseBuilder;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.index.IndexHits;
 import org.neo4j.graphdb.index.ReadableIndex;
+import org.neo4j.graphdb.index.UniqueFactory;
 
 import com.yahoo.ycsb.ByteIterator;
 import com.yahoo.ycsb.DB;
@@ -107,18 +108,31 @@ public class Neo4JNativeClient extends DB
         try
         {            
             
-            Node node = graphDb.createNode();
+            /*Node node = graphDb.createNode();
             node.setProperty("USER_ID", key);
             node.setProperty("NAME", key + "Keenu Reeves");
             node.setProperty("AGE", key + "39");
-            node.setProperty("ADDRESS", key + "New Street");           
+            node.setProperty("ADDRESS", key + "New Street"); */
+            
+            
+            UniqueFactory<Node> factory = new UniqueFactory.UniqueNodeFactory(graphDb, "users")
+            {
+                @Override
+                protected void initialize(Node created, Map<String, Object> properties)
+                {
+                    created.setProperty("USER_ID", properties.get("USER_ID"));
+                }
+            };           
+           Node node = factory.getOrCreate("USER_ID", key);
+           node.setProperty("NAME", key + "Keenu Reeves");
+           node.setProperty("AGE", key + "39");
+           node.setProperty("ADDRESS", key + "New Street");            
             
             j++;
             if (j % 5000 == 0)
             {
                 tx.success();
-                tx.finish();
-                
+                tx.finish();                
                 tx = graphDb.beginTx();
             }
             
